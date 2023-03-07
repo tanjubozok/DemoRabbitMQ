@@ -10,10 +10,13 @@ using var connection = connectionFactory.CreateConnection();
 var channel = connection.CreateModel();
 channel.QueueDeclare("hello-queue", true, false, false);
 
-string mesage = "Lorem ipsum dolor sit amet consectetur adipisicing elit.";
-var messageBody = Encoding.UTF8.GetBytes(mesage);
+var list = Enumerable.Range(1, 100).ToList();
+foreach (var item in list)
+{
+    string mesage = $"{item} : Lorem ipsum dolor";
+    var messageBody = Encoding.UTF8.GetBytes(mesage);
+    channel.BasicPublish(string.Empty, "hello-queue", null, messageBody);
+    Console.WriteLine("Mesaj gönderildi");
+};
 
-channel.BasicPublish(string.Empty, "hello-queue", null, messageBody);
-
-Console.WriteLine("Mesaj gönderildi");
 Console.ReadLine();
